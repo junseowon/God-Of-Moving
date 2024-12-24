@@ -26,8 +26,8 @@ class Item(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill((0, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(20, self.game.now_width - self.rect.width)
-        self.rect.y = random.randint(20, self.game.now_height - self.rect.height)
+        self.rect.x = random.randint(20, self.game.now_width - self.rect.width - 40)
+        self.rect.y = random.randint(20, self.game.now_height - self.rect.height - 40)
         print(self.rect.x, self.rect.y)
         # 클릭 횟수 초기화
         self.click_count = 0
