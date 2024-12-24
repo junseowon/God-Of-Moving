@@ -5,13 +5,10 @@ from game import *
 
 ## 컬러 세팅 ##
 BLUE = (0,0,255)
-RED = (255,0,0)
+RED = (255,0,0) 
 GREEN = (0,255,0)
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-
-## 폰트 세팅 ##
-NEODGM_FONT_PATH = './fonts/neodgm.ttf'
 
 class Main:
     def __init__(self):

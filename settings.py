@@ -1,7 +1,7 @@
 import math
 
 #game settings
-RES = WIDTH, HEIGHT = 1280, 720
+RES = WIDTH, HEIGHT = 700, 700
 HALF_WIDTH = WIDTH // 2
 HALF_HEIGHT = HEIGHT // 2
 FPS = 60
@@ -31,3 +31,6 @@ SCALE = WIDTH // NUM_RAYS
 
 TEXTURE_SIZE = 256
 HALF_TEXTURE_SIZE = TEXTURE_SIZE // 2
+
+## 폰트 세팅 ##
+NEODGM_FONT_PATH = './fonts/neodgm.ttf'
