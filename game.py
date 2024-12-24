@@ -59,8 +59,8 @@ class Game:
             else:
                 self.screen.blit(sprite.image, sprite.rect)  # 총알은 기존 방식대로 그리기
         self.player.draw()
-        self.score_text = self.font.render(f"Score: {self.score}", True, WHITE)
-        self.screen.blit(self.score_text, (10, 10))
+        self.score_text = self.font.render(f"{self.score}", True, WHITE)
+        self.screen.blit(self.score_text, (self.now_width // 2, 10))
 
     def create_bullets(self):
         # 화면 밖에서 랜덤으로 총알이 발사될 위치 지정
@@ -96,11 +96,12 @@ class Game:
                 print(self.count,"맞음")
 
         if WIDTH - self.get_ticks <= 250:
-            self.running = False
+            self.get_ticks = pygame.time.get_ticks()
         else:
             self.get_ticks = pygame.time.get_ticks() // 60
-            self.now_width = WIDTH - self.get_ticks
-            self.now_height = HEIGHT - self.get_ticks
+        
+        self.now_width = WIDTH - self.get_ticks
+        self.now_height = HEIGHT - self.get_ticks
 
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
@@ -120,7 +121,7 @@ class Game:
                     if self.item.on_click():  # 클릭된 아이템이 3번 클릭되었는지 확인
                         self.now_width = WIDTH
                         self.now_height = HEIGHT
-                        self.screen = pygame.display.set_mode(RES)
+                        
                         # 점수 이펙트 생성 (아이템의 위치 위로 "+1" 텍스트가 올라가도록)
                         self.score_effect = ScoreEffect(self.item.rect.centerx, self.item.rect.top)
                         self.score_effects.add(self.score_effect)

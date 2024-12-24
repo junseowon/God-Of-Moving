@@ -13,6 +13,7 @@ WHITE = (255,255,255)
 class Main:
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption("무빙의 신")
         self.screen = pygame.display.set_mode(RES)
         self.clock = pygame.time.Clock()
 
@@ -34,7 +35,7 @@ class Main:
     def update(self):
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
-        pygame.display.set_caption("무빙의 신")
+        
 
     def new_game(self):
         self.game = Game()
