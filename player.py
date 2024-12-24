@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game):  
         super().__init__()
         self.game = game
-        self.radius = 10
+        self.radius = 7
         self.color = 'green'
         self.rect = pygame.Rect(0, 0, self.radius * 2, self.radius * 2)
         self.rect.center = self.game.mouse_pos
@@ -38,3 +38,4 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.movement()
         self.over_map()
+        

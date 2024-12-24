@@ -30,8 +30,15 @@ class Scoreboard:
         self.screen.blit(self.score_text, (HALF_WIDTH - self.score_text.get_rect().centerx, 150))
 
     def update(self):
-        if not self.last_score == self.game.score:
-            self.last_score += 1
+
+        if not self.game.score == self.last_score:
+            if self.last_score + 1 <= (self.game.score // 100) * 100:  # 100 단위로 증가
+                self.last_score += 100
+            elif self.last_score + 1 <= (self.game.score // 10) * 10:  # 10 단위로 증가
+                self.last_score += 10
+            else:
+                self.last_score += 1  # 1 단위로 증가
+            self.last_score = min(self.last_score, self.game.score)  # 목표 점수 초과 방지
 
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)

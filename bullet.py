@@ -4,8 +4,9 @@ import math
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, target_x, target_y):
+    def __init__(self, game, x, y, target_x, target_y):
         super().__init__()
+        self.game = game
         self.image = pygame.Surface((5, 10))
         self.image.fill('red')
         self.rect = self.image.get_rect()
@@ -17,7 +18,12 @@ class Bullet(pygame.sprite.Sprite):
         angle = math.degrees(math.atan2(dy, dx))  # 목표 방향으로 각도 계산
         
         # 속도 설정
-        speed = 5
+
+        if self.game.score >= 2000:
+            speed = 7
+        else:    
+            speed = 5
+
         self.dx = math.cos(math.radians(angle)) * speed
         self.dy = math.sin(math.radians(angle)) * speed
 

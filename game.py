@@ -15,7 +15,7 @@ class Game:
         self.mouse_pos = pygame.mouse.get_pos()
         self.screen = pygame.display.set_mode(RES)
         self.clock = pygame.time.Clock()
-        self.last_ticks = pygame.time.get_ticks() // 100
+        self.last_ticks = pygame.time.get_ticks() // 50
         self.running = True
         
         self.now_width = WIDTH
@@ -24,6 +24,8 @@ class Game:
         self.score = 0
 
         self.font = pygame.font.Font(NEODGM_FONT_PATH, 36)
+        self.score_text = self.font.render(f"{self.score}", True, WHITE)
+        self.screen.blit(self.score_text, (self.now_width // 2 - self.score_text.get_rect().centerx, 0))    
 
         self.all_sprites = pygame.sprite.Group()
 
@@ -45,28 +47,30 @@ class Game:
 
     def draw(self):
         self.screen.fill('black')
+
+        self.score_text = self.font.render(f"{self.score}", True, WHITE)
+        self.screen.blit(self.score_text, (self.now_width // 2 - self.score_text.get_rect().centerx, 0))
+
         for sprite in self.all_sprites:
             if isinstance(sprite, Player):
                 pass
             else:
                 self.screen.blit(sprite.image, sprite.rect)  # 총알은 기존 방식대로 그리기
         self.player.draw()
-        self.score_text = self.font.render(f"{self.score}", True, WHITE)
-        self.screen.blit(self.score_text, (self.now_width // 2 - self.score_text.get_rect().centerx, 10))
-
+        
     def create_bullets(self):
         # 화면 밖에서 랜덤으로 총알이 발사될 위치 지정
         positions = [
             (random.randint(0, self.now_width), 0),  # 위쪽
             (random.randint(0, self.now_width), self.now_height),  # 아래쪽
             (0, random.randint(0, self.now_height)),  # 왼쪽
-            (self.now_height, random.randint(0, self.now_height))  # 오른쪽
+            (self.now_width, random.randint(0, self.now_height))  # 오른쪽
         ]
     
         # 각 총알은 화면 밖에서 생성되어 플레이어 방향으로 향하게 됩니다.
         for pos in positions:
             x, y = pos
-            bullet = Bullet(x, y, self.mouse_pos[0], self.mouse_pos[1])  # 플레이어 위치를 목표로
+            bullet = Bullet(self, x, y, self.mouse_pos[0], self.mouse_pos[1])  # 플레이어 위치를 목표로
             self.all_sprites.add(bullet)
             self.bullets.add(bullet)
 
@@ -75,9 +79,8 @@ class Game:
         self.mouse_pos = pygame.mouse.get_pos()
 
         self.score += 1
-
-        if self.now_width >= 250:
-            self.current_tick = pygame.time.get_ticks() // 100
+        if self.now_width > 300:
+            self.current_tick = pygame.time.get_ticks() // 50
 
         self.max_screen_width = WIDTH - (self.current_tick - self.last_ticks)
         self.screen_width_percentage = self.max_screen_width / WIDTH
@@ -88,7 +91,7 @@ class Game:
         self.now_width = (int)(WIDTH * self.screen_width_percentage)
         self.now_height = (int)(HEIGHT * self.screen_height_percentage)
 
-        if random.randint(1, 30) == 1:
+        if random.randint(1, 20) == 1:
             self.create_bullets()
 
         self.all_sprites.update()
@@ -99,11 +102,13 @@ class Game:
                 pygame.mouse.set_visible(True)
                 self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
                 self.scoreboard.run()
-            
-
+        
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
-        self.screen = pygame.display.set_mode((self.now_width, self.now_height))
+        if self.now_width > 300:
+            self.screen = pygame.display.set_mode((self.now_width, self.now_height))
+        else:
+            self.screen = pygame.display.set_mode((300, 300))
 
     def check_events(self):
         for event in pygame.event.get():
@@ -117,7 +122,7 @@ class Game:
                 # 아이템과 마우스 클릭 위치가 겹치는지 확인
                 if self.item.rect.collidepoint(now_mouse_pos):
                     if self.item.on_click():  # 클릭된 아이템이 3번 클릭되었는지 확인
-                        self.last_ticks = pygame.time.get_ticks() // 100
+                        self.last_ticks = pygame.time.get_ticks() // 50
                         
                         # 점수 이펙트 생성 (아이템의 위치 위로 "+1" 텍스트가 올라가도록)
                         self.score_effect = ScoreEffect(self.item.rect.centerx, self.item.rect.top)
@@ -129,9 +134,11 @@ class Game:
                         self.item = Item()
                         self.items.add(self.item)
                         self.all_sprites.add(self.item)
+                    
 
     def run(self):
         while self.running:
             self.check_events()
-            self.update()
             self.draw()
+            self.update()
+            

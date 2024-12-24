@@ -27,8 +27,6 @@ class Main:
         self.screen.blit(self.start_text, (HALF_WIDTH - self.start_text_width // 2, HALF_HEIGHT + self.start_text_height + 100))
 
     def update(self):
-        
-
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
 
