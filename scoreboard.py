@@ -13,7 +13,7 @@ class Scoreboard:
 
         self.font = pygame.font.Font(NEODGM_FONT_PATH, 40)
         self.score_font = pygame.font.Font(NEODGM_FONT_PATH, 100)
-        self.start_text = self.font.render('스페이스를 눌러 시작', True, GREEN)
+        self.start_text = self.font.render('스페이스를 눌러 재시작', True, GREEN)
         self.start_text_width = self.start_text.get_rect().size[0]
         self.start_text_height = self.start_text.get_rect().size[1]
         self.score_text = self.font.render('점수', True, GREEN)
@@ -30,7 +30,6 @@ class Scoreboard:
         self.screen.blit(self.score_text, (HALF_WIDTH - self.score_text.get_rect().centerx, 150))
 
     def update(self):
-
         if not self.last_score == self.game.score:
             self.last_score += 1
 
@@ -42,6 +41,9 @@ class Scoreboard:
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.game.__init__()
+                self.game.run()
 
     def run(self):
         while True:

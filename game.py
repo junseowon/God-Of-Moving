@@ -38,7 +38,7 @@ class Game:
 
     def new_game(self):
         self.player = Player(self)
-        self.item = Item(self)
+        self.item = Item()
         self.scoreboard = Scoreboard(self)
         self.items.add(self.item)
         self.all_sprites.add(self.item)
@@ -97,8 +97,9 @@ class Game:
             if self.player.collide_point(bullet.rect.center):
                 bullet.kill()  # 충돌한 총알 제거
                 pygame.mouse.set_visible(True)
+                self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
                 self.scoreboard.run()
-
+            
 
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
@@ -125,7 +126,7 @@ class Game:
                         self.item.kill()  # 아이템 제거
  
                         # 새로운 아이템 생성
-                        self.item = Item(self)
+                        self.item = Item()
                         self.items.add(self.item)
                         self.all_sprites.add(self.item)
 
