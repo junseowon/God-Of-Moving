@@ -23,9 +23,7 @@ class Game:
 
         self.score = 0
 
-        self.font = pygame.font.Font(NEODGM_FONT_PATH, 36)
-        self.score_text = self.font.render(f"{self.score}", True, WHITE)
-        self.screen.blit(self.score_text, (self.now_width // 2 - self.score_text.get_rect().centerx, 0))    
+        self.font = pygame.font.Font(NEODGM_FONT_PATH, 36)      
 
         self.all_sprites = pygame.sprite.Group()
 
@@ -48,15 +46,15 @@ class Game:
     def draw(self):
         self.screen.fill('black')
 
-        self.score_text = self.font.render(f"{self.score}", True, WHITE)
-        self.screen.blit(self.score_text, (self.now_width // 2 - self.score_text.get_rect().centerx, 0))
-
         for sprite in self.all_sprites:
             if isinstance(sprite, Player):
                 pass
             else:
                 self.screen.blit(sprite.image, sprite.rect)  # 총알은 기존 방식대로 그리기
+        
         self.player.draw()
+
+
         
     def create_bullets(self):
         # 화면 밖에서 랜덤으로 총알이 발사될 위치 지정
@@ -79,17 +77,6 @@ class Game:
         self.mouse_pos = pygame.mouse.get_pos()
 
         self.score += 1
-        if self.now_width > 300:
-            self.current_tick = pygame.time.get_ticks() // 50
-
-        self.max_screen_width = WIDTH - (self.current_tick - self.last_ticks)
-        self.screen_width_percentage = self.max_screen_width / WIDTH
-
-        self.max_screen_height = HEIGHT - (self.current_tick - self.last_ticks)
-        self.screen_height_percentage = self.max_screen_height / HEIGHT
-
-        self.now_width = (int)(WIDTH * self.screen_width_percentage)
-        self.now_height = (int)(HEIGHT * self.screen_height_percentage)
 
         if random.randint(1, 20) == 1:
             self.create_bullets()
@@ -106,9 +93,21 @@ class Game:
         
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
-        if self.now_width > 300:
+        print(self.now_width)
+        if self.now_width > 300:            
+            self.current_tick = pygame.time.get_ticks() // 50
+            self.max_screen_width = WIDTH - (self.current_tick - self.last_ticks)
+            self.screen_width_percentage = self.max_screen_width / WIDTH
+
+            self.max_screen_height = HEIGHT - (self.current_tick - self.last_ticks)
+            self.screen_height_percentage = self.max_screen_height / HEIGHT
+
+            self.now_width = (int)(WIDTH * self.screen_width_percentage)
+            self.now_height = (int)(HEIGHT * self.screen_height_percentage)
+
             self.screen = pygame.display.set_mode((self.now_width, self.now_height))
         else:
+            print('최소')
             self.screen = pygame.display.set_mode((300, 300))
 
     def check_events(self):
@@ -122,7 +121,8 @@ class Game:
                 now_mouse_pos = pygame.mouse.get_pos()
                 # 아이템과 마우스 클릭 위치가 겹치는지 확인
                 if self.item.rect.collidepoint(now_mouse_pos):
-                    if self.item.on_click():  # 클릭된 아이템이 3번 클릭되었는지 확인
+                    if self.item.on_click():  # 클릭된 아이템이 클릭되었는지 확인
+                        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
                         self.last_ticks = pygame.time.get_ticks() // 50
                         
                         # 점수 이펙트 생성 (아이템의 위치 위로 "+1" 텍스트가 올라가도록)
@@ -139,6 +139,7 @@ class Game:
 
     def run(self):
         pygame.mouse.set_visible(False)
+        pygame.mouse.set_pos(PLAYER_POS)
         while self.running:
             self.check_events()
             self.draw()

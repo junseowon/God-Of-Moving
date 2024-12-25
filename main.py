@@ -40,10 +40,10 @@ class Main:
 
     def check_events(self):
         
-        if self.scoreboard.retry:                
-            self.game.__init__()
+        if self.scoreboard.retry:           
+            self.game = Game()     
             self.game.run()
-            self.scoreboard.retry = False
+            self.scoreboard.__init__(self.game)
 
         if not self.game.running:
             print(self.game.running, "죽음")           
