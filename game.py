@@ -10,12 +10,12 @@ from scoreboard import *
 class Game:
     def __init__(self):
         pygame.init()
-        pygame.mouse.set_visible(False)
         pygame.mouse.get_rel()
         self.mouse_pos = pygame.mouse.get_pos()
         self.screen = pygame.display.set_mode(RES)
         self.clock = pygame.time.Clock()
         self.last_ticks = pygame.time.get_ticks() // 50
+
         self.running = True
         
         self.now_width = WIDTH
@@ -99,9 +99,10 @@ class Game:
         for bullet in self.bullets:
             if self.player.collide_point(bullet.rect.center):
                 bullet.kill()  # 충돌한 총알 제거
-                pygame.mouse.set_visible(True)
                 self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-                self.scoreboard.run()
+                pygame.mouse.set_visible(True)
+                print('죽음')
+                self.running = False               
         
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
@@ -137,6 +138,7 @@ class Game:
                     
 
     def run(self):
+        pygame.mouse.set_visible(False)
         while self.running:
             self.check_events()
             self.draw()

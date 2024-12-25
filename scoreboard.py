@@ -9,6 +9,8 @@ class Scoreboard:
         self.screen = pygame.display.set_mode(RES)
         self.clock = pygame.time.Clock()
         
+        self.retry = False
+
         self.last_score = 0
 
         self.font = pygame.font.Font(NEODGM_FONT_PATH, 40)
@@ -49,11 +51,16 @@ class Scoreboard:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.game.__init__()
-                self.game.run()
+                print("재시작")
+                self.retry = True
+                return self.retry
+                
 
-    def run(self):
-        while True:
-            self.check_events()
+    def run(self):        
+        print("점수판 시작")
+        self.screen = pygame.display.set_mode(RES)
+        while not self.retry:            
+            self.check_events()                
             self.update()
             self.draw()
+            

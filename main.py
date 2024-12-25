@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import *
 from game import *
+from scoreboard import *
 
 class Main:
     def __init__(self):
@@ -20,6 +21,8 @@ class Main:
         self.start_text_width = self.start_text.get_rect().size[0]
         self.start_text_height = self.start_text.get_rect().size[1]
 
+        self.new_game()
+
     def draw(self):
         self.screen.fill('black')
 
@@ -32,22 +35,34 @@ class Main:
 
     def new_game(self):
         self.game = Game()
+        self.scoreboard = Scoreboard(self.game)
         self.mouse_pos = pygame.mouse.set_pos(PLAYER_POS)
-        self.game.run()
 
     def check_events(self):
+        
+        if self.scoreboard.retry:                
+            self.game.__init__()
+            self.game.run()
+            self.scoreboard.retry = False
+
+        if not self.game.running:
+            print(self.game.running, "죽음")           
+            self.scoreboard.run()
+        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.new_game()
+                #self.new_game()
+                self.game.run()
 
     def run(self):
         while True:
             self.check_events()
             self.update()
-            self.draw()
+            self.draw()            
 
 if __name__ == '__main__':
     main = Main()
