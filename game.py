@@ -94,6 +94,7 @@ class Game:
         pygame.display.flip()
         self.delta_time = self.clock.tick(FPS)
         print(self.now_width)
+        """
         if self.now_width > 300:            
             self.current_tick = pygame.time.get_ticks() // 50
             self.max_screen_width = WIDTH - (self.current_tick - self.last_ticks)
@@ -109,6 +110,7 @@ class Game:
         else:
             print('최소')
             self.screen = pygame.display.set_mode((300, 300))
+        """
 
     def check_events(self):
         for event in pygame.event.get():
